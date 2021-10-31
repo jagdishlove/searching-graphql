@@ -11,14 +11,19 @@ import {
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link:new HttpLink(
-  {uri:'https://trusting-toucan-66.hasura.app/v1/graphql',
-  headers:{
-  'x-hasura-admin-secret':'dldnrw71yojp63eiGoyTLyYCOAzZL43yxdter0x3hn7WU1S7587W0o7E1jP4dXzC'
-  }
-  }
+  link: new HttpLink(
+    {
+      uri: process.env.REACT_APP_HASURA_URI,
+      headers: {
+        'x-hasura-admin-secret': process.env.REACT_APP_x_hasura_admin_secret,
+      }
+    }
   ),
 });
+
+console.log(process.env)
+
+
 
 
 

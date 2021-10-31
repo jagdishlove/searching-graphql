@@ -17,12 +17,13 @@ function App() {
   const { loading, error, data } = useQuery(USERS, { fetchPolicy: 'no-cache' })
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error :(</p>
-  console.log(data)
 
 
   return (
     <div className="App">
       <div className="App">
+        <input type="text" placeholder="Search"/>
+        <button>Search</button>
         {data.users.map(user => (
           <p>{user.name}</p>
         ))}
