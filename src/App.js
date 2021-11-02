@@ -1,35 +1,42 @@
 import './App.css';
-import { useQuery, gql } from '@apollo/client'
+import React, { useState } from 'react'
+import { useLazyQuery, gql } from '@apollo/client'
+import Search from './components/Search';
+import Users from './components/Users'
 
-const USERS = gql`
-  query{
-    users{
-      id
-      name
-      schools
-    }
-    }
-  
+const SEARCH = gql`
+query Search($match: String!){
+  users(order_by: {name: asc}, where: {name: {_ilike: $match}}){
+    id
+    name
+}
+  }
 `;
+
+
 
 function App() {
 
-  const { loading, error, data } = useQuery(USERS, { fetchPolicy: 'no-cache' })
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error :(</p>
+  const [state, setState] = useState("")
+  const [search, { data, loading, error }] = useLazyQuery(SEARCH)
+
+
 
 
   return (
     <div className="App">
       <div className="App">
-        <input type="text" placeholder="Search"/>
-        <button>Search</button>
-        {data.users.map(user => (
-          <p>{user.name}</p>
-        ))}
+        <Search
+          loading={loading}
+          error={error}
+          state={state}
+          onChange={e => setState(e.target.value)}
+          onSearch={() => { search({ variables: { match: `%${state}%` } }) }} />
+        <Users newUser={data ? data.users : null} />
+
+
       </div>
     </div>
   );
 }
-
 export default App;
